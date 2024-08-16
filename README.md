@@ -1,8 +1,8 @@
 # AITools
 
-this is a new project that isn't released yet -- so don't expect too much.
+This is a new project that isn't released yet -- so don't expect too much.
 
-AITools is a Python project that provides utilities and tools for working with AI agents.
+AITools is a Python project that provides utilities and tools for working with AI agents, specifically using the Ollama API. It features a clean, easy-to-understand structure and uses modern Python libraries for efficient console-based interactions.
 
 ## Project Structure
 
@@ -21,10 +21,19 @@ AITools/
 │   │   └── __init__.py
 │   └── utils/
 │       ├── __init__.py
-│       └── input_util.py
+│       ├── input_util.py
+│       └── response.py
 └── tests/
     └── input_util_test.py
 ```
+
+## Features
+
+- Asynchronous input handling with auto-completion support
+- Streaming responses from AI models
+- Clean and readable console output using the `rich` library
+- Easy-to-extend framework for AI interactions
+- `input_util.py`: Provides an AI-friendly prompt function that supports asynchronous input and auto-completion.
 
 ## Setup
 
@@ -54,13 +63,15 @@ AITools/
    pip install -r requirements.txt
    ```
 
-## Running the Application
+## Usage
 
 To run the main application:
 
 ```
 python main.py
 ```
+
+This will start an interactive session where you can enter prompts and receive responses from the AI model.
 
 ## Running Tests
 
@@ -82,9 +93,15 @@ Or, if you're in the `tests` directory:
 python input_util_test.py
 ```
 
-## Features
+## Key Components
 
-- `input_util.py`: Provides an AI-friendly prompt function that supports asynchronous input and auto-completion.
+- `main.py`: The entry point of the application. It handles the main loop for user interactions.
+- `modules/utils/input_util.py`: Contains the `ai_friendly_prompt` function for handling user input asynchronously.
+- `modules/utils/response.py`: Manages the interaction with the Ollama API and handles the response streaming.
+
+## Customization
+
+You can easily extend this framework to work with different AI models or APIs by modifying the `OllamaClient` class in `response.py`.
 
 ## Contributing
 
