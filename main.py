@@ -3,10 +3,6 @@ from modules.utils.input_util import ai_friendly_prompt
 from modules.utils.response import process_response
 from pathlib import Path
 import sys
-import logging
-
-# Set logging level to ERROR to suppress debug messages
-logging.basicConfig(level=logging.ERROR)
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent
@@ -18,6 +14,7 @@ async def main():
         if prompt.lower() == "exit":
             break
         process_response(prompt)
+        print()  # Add a newline after each response
 
 if __name__ == "__main__":
     asyncio.run(main())
