@@ -1,5 +1,7 @@
 # AITools
 
+## Note:  It's my hope that this architecture will allow me to keep track of all the code as well as possible.  It's important that ony core functionality exist in each module.
+
 ## Architecture Guide
 
 AITools is designed with modularity, threading, and asynchronous operations in mind. This architecture allows for efficient, non-blocking interactions with AI models while maintaining a simple and extensible codebase.
