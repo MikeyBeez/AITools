@@ -10,7 +10,7 @@ AITools is designed with modularity, threading, and asynchronous operations in m
 
 1. **Modularity**: The project is organized into small, manageable files, each with a specific purpose. This modular approach makes the codebase easy to understand, maintain, and extend.
 
-2. **Asynchronous Input**: User input is handled asynchronously using Python's `asyncio` library. This allows the application to remain responsive even while waiting for user input.
+2. **Asynchronous Input**: User input is handled asynchronously using Python's `asyncio` library and the `prompt_toolkit` package. This allows the application to remain responsive even while waiting for user input.  `prompt_toolkit` has a lot of features to help edit the prompt -- including completions.  
 
 3. **Threaded Output**: The response from the AI model is processed and displayed in a separate thread, using the `rich` library's `Live` display. This enables real-time streaming of the AI's response without blocking the main application thread.
 
