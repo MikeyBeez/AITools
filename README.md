@@ -1,5 +1,7 @@
 # AITools
 
+this is a new project that isn't released yet -- so don't expect too much.
+
 AITools is a Python project that provides utilities and tools for working with AI agents.
 
 ## Project Structure
@@ -101,4 +103,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 MikeyBeez
 
 Project Link: [https://github.com/MikeyBeez/AITools](https://github.com/MikeyBeez/AITools)
-
