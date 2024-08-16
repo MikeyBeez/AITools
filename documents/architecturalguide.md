@@ -16,12 +16,46 @@ AITools is designed with modularity, threading, and asynchronous operations in m
 
 5. **Extensibility**: The project's structure is designed to be easily extensible. New features can be added by creating new modules within the existing directory structure.
 
-    ### Current Implementation
+6. **Context Management**: The conversation history is managed separately, allowing for context-aware interactions with the AI model without complicating the main logic.
+
+### Current Implementation
 
 - `main.py`: The entry point of the application. It runs an asynchronous event loop that handles user input and initiates AI responses.
 - `modules/utils/input_util.py`: Contains the asynchronous input handling logic.
 - `modules/utils/response.py`: Manages the threaded interaction with the AI model and handles response streaming.
 - `modules/utils/mprint.py`: Implements the `WordAwareStreamPrinter` class for handling threaded, formatted console output. (Note: This file is no longer actively used as we've switched to the `rich` library for output, but it's kept for reference and potential future use.)
+- `modules/utils/context.py`: Manages the conversation history using a FIFO queue, providing context for AI responses.
+
+### Context Management and Conversation Flow
+
+The context management system is a key feature of AITools, allowing for more coherent and context-aware conversations with the AI model. Here's how it works:
+
+1. **Context Storage**:
+   - The `ConversationContext` class in `context.py` maintains a FIFO queue (implemented using `collections.deque`) of the last 15 interactions.
+   - Each interaction is stored as a tuple of (prompt, response).
+
+2. **Adding Context**:
+   - After each successful interaction, the prompt and the AI's response are added to the context queue in the `OllamaClient.process_response` method.
+   - If the queue is full, the oldest interaction is automatically removed to make room for the new one.
+
+3. **Using Context in Prompts**:
+   - Before sending a new prompt to the AI model, the `OllamaClient.process_response` method retrieves the current context.
+   - The context is prepended to the new prompt, formatted as a conversation history.
+   - This allows the AI model to consider previous interactions when generating its response.
+
+4. **Context Clearing**:
+   - Users can type "clear history" as a prompt to reset the conversation context.
+   - This is handled in the main loop, calling the `ConversationContext.clear()` method.
+
+5. **Flow of a Conversation**:
+   a. User enters a prompt.
+   b. The prompt is combined with the conversation history.
+   c. The combined prompt is sent to the AI model.
+   d. The AI's response is received and displayed.
+   e. The new interaction (prompt + response) is added to the context queue.
+   f. The process repeats for the next user prompt.
+
+This context management system allows the AI to maintain a sense of conversation flow, refer back to previous information, and provide more coherent and contextually relevant responses.
 
 ### Future Extensibility
 
