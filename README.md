@@ -37,10 +37,11 @@ AITools/
 - Easy-to-extend framework for AI interactions
 - `input_util.py`: Provides an AI-friendly prompt function that supports asynchronous input and auto-completion
 - Conversation history management with a FIFO queue for context-aware responses
+- Logging system that writes to both console and file
 
 ## Architecture Guide
 
-AITools is designed with modularity, threading, and asynchronous operations in mind. This architecture allows for efficient, non-blocking interactions with AI models while maintaining a simple and extensible codebase.
+AITools is designed with modularity, threading, and asynchronous operations in mind. This architecture allows for efficient, non-blocking interactions with AI models while maintaining a simple and extensible codebase.  There;s an architectural guide in the documents directory.
 
 ### Key Architectural Principles
 
@@ -86,6 +87,18 @@ The current architecture provides a solid foundation for adding more features an
 6. **Plugin System**: A plugin architecture could be implemented to allow for easy addition of new commands or features without modifying the core codebase.
 
 As we continue to develop AITools, we will adhere to this modular, threaded, and asynchronous approach. New features will be implemented in small, manageable files that integrate seamlessly with the existing architecture. This approach ensures that the project remains easy to understand and maintain, even as it grows in complexity and capability.
+
+### Logging System
+
+AITools implements a logging system that writes log messages to both the console and a file:
+
+- Log files are stored in the `logs` directory at the project root.
+- The main log file is named `aitools.log`.
+- Logging is set up in `main.py` and uses Python's built-in `logging` module.
+- Log messages include timestamps, logger name, log level, and the log message.
+- The current logging level is set to INFO, which captures all informational messages, warnings, and errors.
+
+This logging system allows for easier debugging and monitoring of the application's behavior, especially when running in production or when diagnosing issues reported by users.
 
 ## Setup
 
