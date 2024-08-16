@@ -33,6 +33,7 @@ AITools/
 
 - Asynchronous input handling with auto-completion support
 - Streaming responses from AI models
+- Clean and editable console cwinputoutput using the `prompt_tools` library
 - Clean and readable console output using the `rich` library
 - Easy-to-extend framework for AI interactions
 - `input_util.py`: Provides an AI-friendly prompt function that supports asynchronous input and auto-completion
@@ -58,7 +59,7 @@ AITools is designed with modularity, threading, and asynchronous operations in m
 ### Current Implementation
 
 - `main.py`: The entry point of the application. It runs an asynchronous event loop that handles user input and initiates AI responses.
-- `modules/utils/input_util.py`: Contains the asynchronous input handling logic.
+- `modules/utils/input_util.py`: Contains the asynchronous input handling logic and uses the prompt_tools library.
 - `modules/utils/response.py`: Manages the threaded interaction with the AI model and handles response streaming.
 - `modules/utils/mprint.py`: Implements the `WordAwareStreamPrinter` class for handling threaded, formatted console output. (Note: This file is no longer actively used as we've switched to the `rich` library for output, but it's kept for reference and potential future use.)
 - `modules/utils/context.py`: Manages the conversation history using a FIFO queue, providing context for AI responses.
