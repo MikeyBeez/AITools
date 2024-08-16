@@ -1,6 +1,5 @@
 from prompt_toolkit import PromptSession
 from prompt_toolkit.completion import WordCompleter
-import asyncio
 
 
 async def ai_friendly_prompt(prompt="> ", completions=None):
@@ -16,14 +15,3 @@ async def ai_friendly_prompt(prompt="> ", completions=None):
         return result
     except (KeyboardInterrupt, EOFError):
         return None
-
-
-# Example usage
-async def main():
-    completions = ["help", "status", "exit"]
-    result = await ai_friendly_prompt("Agent> ", completions)
-    print(f"Received: {result}")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
