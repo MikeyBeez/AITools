@@ -5,6 +5,7 @@ import sys
 from modules.utils.input_util import ai_friendly_prompt
 from modules.utils.response import process_response
 from modules.utils.context import conversation_context
+from modules.utils.banner import setup_console, print_welcome_banner, print_separator
 
 # Add the project root to the Python path
 project_root = Path(__file__).parent
@@ -28,6 +29,11 @@ logger = logging.getLogger(__name__)
 
 async def main():
     logger.info("Starting AITools")
+    
+    console = setup_console()
+    print_welcome_banner(console)
+    print_separator(console)
+    
     while True:
         prompt = await ai_friendly_prompt("Enter your prompt (or 'exit' to quit): ")
         if prompt.lower() == "exit":
@@ -36,11 +42,11 @@ async def main():
         if prompt.lower() == "clear history":
             conversation_context.clear()
             logger.info("Conversation history cleared")
-            print("Conversation history cleared.")
+            console.print("Conversation history cleared.", style="bold green")
             continue
         logger.info(f"Processing prompt: {prompt}")
         process_response(prompt)
-        print()  # Add a newline after each response
+        print_separator(console)
 
 if __name__ == "__main__":
     asyncio.run(main())
