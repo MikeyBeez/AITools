@@ -1,6 +1,7 @@
 import asyncio
 from modules.utils.input_util import ai_friendly_prompt
 from modules.utils.response import process_response
+from modules.utils.context import conversation_context
 from pathlib import Path
 import sys
 
@@ -13,6 +14,10 @@ async def main():
         prompt = await ai_friendly_prompt("Enter your prompt (or 'exit' to quit): ")
         if prompt.lower() == "exit":
             break
+        if prompt.lower() == "clear history":
+            conversation_context.clear()
+            print("Conversation history cleared.")
+            continue
         process_response(prompt)
         print()  # Add a newline after each response
 

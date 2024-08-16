@@ -4,6 +4,7 @@ from rich.live import Live
 from rich.console import Console
 from rich.text import Text
 import logging
+from .context import conversation_context
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -16,7 +17,12 @@ class OllamaClient:
     def process_response(self, prompt):
         url = f"{self.base_url}/api/generate"
         headers = {"Content-Type": "application/json"}
-        data = {"model": self.model, "prompt": prompt}
+        
+        # Include conversation history in the prompt
+        context = conversation_context.get_context_string()
+        full_prompt = f"{context}\nHuman: {prompt}\nAI:"
+        
+        data = {"model": self.model, "prompt": full_prompt}
 
         try:
             with Live(console=self.console, refresh_per_second=4) as live:
@@ -31,6 +37,8 @@ class OllamaClient:
                                     live.update(Text(full_response))
                                 if json_response.get("done", False):
                                     break
+                        # Add the interaction to the conversation context
+                        conversation_context.add_interaction(prompt, full_response.strip())
                     else:
                         self.console.print(f"Error: Received status code {response.status_code}")
         except requests.RequestException as e:
