@@ -30,4 +30,4 @@ def save_interaction(prompt, response, username, model_name):
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-    print(f"Interaction saved to {file_path}")
+#    print(f"Interaction saved to {file_path}")
