@@ -34,7 +34,7 @@ async def main():
                 continue
 
         logger.info(f"Processing prompt: {prompt}")
-        process_response(prompt, config['model_name'])
+        process_response(prompt, config['model_name'], config['user_name'])  # Pass the username
         print_separator(console)
 
 if __name__ == "__main__":

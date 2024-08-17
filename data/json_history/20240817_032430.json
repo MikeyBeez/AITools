@@ -1,0 +1,7 @@
+{
+  "timestamp": "2024-08-17T03:24:30.101223",
+  "username": "Mike Bee",
+  "model_name": "llama3.1:latest",
+  "prompt": "Name 10 computer scientists.",
+  "response": "Here are 10 computer scientists:\n\n1. Alan Turing\n2. John McCarthy\n3. Donald Knuth\n4. Marvin Minsky\n5. Kathleen Antonelli (first female programmer)\n6. Steve Jobs\n7. Tim Berners-Lee\n8. Larry Wall (Perl creator)\n9. Brian Kernighan\n10. Douglas Engelbart"
+}

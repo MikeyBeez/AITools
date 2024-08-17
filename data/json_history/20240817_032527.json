@@ -1,0 +1,7 @@
+{
+  "timestamp": "2024-08-17T03:25:27.446981",
+  "username": "Mike Bee",
+  "model_name": "llama3.1:latest",
+  "prompt": "Who was Douglas Engelbart?",
+  "response": "Douglas Engelbart was an American computer scientist and a pioneer in the field of human-computer interaction. He is best known for his work on the first interactive high-level graphical user interface, which he called \"NLS\" (or \"oN-line System\"). This system was developed in the 1960s at SRI International and featured many innovations that are now standard in modern computing interfaces.\n\nEngelbart's work on NLS included:\n\n1. The mouse: Engelbart is credited with inventing the first computer mouse, which he called the \"X-Y Position Indicator.\"\n2. Hypertext: Engelbart developed a system of hypertext links, where users could click on words or images to access related information.\n3. Graphical user interface (GUI): NLS featured a GUI that allowed users to interact with the computer using visual icons and menus rather than typing commands.\n4. Windowing: Engelbart's system allowed users to have multiple windows open at the same time, each containing different information.\n\nEngelbart's work on NLS was influential in shaping the modern personal computer interface, and he is often referred to as one of the pioneers of the graphical user interface."
+}

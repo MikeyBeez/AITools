@@ -6,16 +6,32 @@ from rich.text import Text
 import logging
 import sys
 from .context import conversation_context
+from .save_history import save_interaction  # Add this import
 
 logging.basicConfig(level=logging.ERROR)
 
 
 class OllamaClient:
     def __init__(self, base_url="http://localhost:11434"):
+        """
+        Initialize the OllamaClient.
+
+        Args:
+            base_url (str): The base URL for the Ollama API.
+        """
         self.base_url = base_url
         self.console = Console()
 
-    def process_response(self, prompt, model):
+    def process_response(self, prompt, model, username):
+        # Add username parameter
+        """
+        Process a prompt and generate a response using the Ollama API.
+
+        Args:
+            prompt (str): The user's input prompt.
+            model (str): The name of the model to use.
+            username (str): The username of the current user.
+        """
         url = f"{self.base_url}/api/generate"
         headers = {"Content-Type": "application/json"}
 
@@ -38,17 +54,29 @@ class OllamaClient:
                                 if json_response.get("done", False):
                                     break
                         conversation_context.add_interaction(prompt, full_response.strip())
+
+                        # Save the interaction to a JSON file
+                        save_interaction(prompt, full_response.strip(), username, model)
                     else:
                         self.console.print(f"Error: Received status code {response.status_code}")
         except requests.RequestException as e:
             self.console.print(f"Error connecting to Ollama: {e}")
 
 
+# Create a default client instance
 default_client = OllamaClient()
 
 
-def process_response(prompt, model):
-    default_client.process_response(prompt, model)
+def process_response(prompt, model, username):  # Add username parameter
+    """
+    Process a response using the default Ollama client.
+
+    Args:
+        prompt (str): The user's input prompt.
+        model (str): The name of the model to use.
+        username (str): The username of the current user.
+    """
+    default_client.process_response(prompt, model, username)
 
 
 if __name__ == "__main__":
@@ -59,4 +87,4 @@ if __name__ == "__main__":
         model = default_model
 
     print(f"Testing with model: {model}")
-    process_response("Hello, world!", model)
+    process_response("Hello, world!", model, "TestUser")  # Add a test username

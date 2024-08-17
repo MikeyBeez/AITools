@@ -1,0 +1,7 @@
+{
+  "timestamp": "2024-08-17T00:47:04.688003",
+  "username": "Mike Bee",
+  "model_name": "llama3.1:latest",
+  "prompt": "Name 5 computer scientists",
+  "response": "Here are five famous computer scientists:\n\n1. Alan Turing - Known for his work on the theoretical foundations of computation and development of the Turing machine.\n2. Donald Knuth - Notable for his multi-volume work \"The Art of Computer Programming\" and contributions to algorithms and data structures.\n3. Jon Kleinberg - Pioneered several key concepts in computer science, including dynamic programming and the analysis of algorithms.\n4. Barbara Liskov - Developed the Liskov substitution principle, a fundamental concept in object-oriented programming.\n5. Edsger Dijkstra - Made significant contributions to the development of operating systems and algorithms, including the invention of the \"Dijkstra's algorithm\" for finding the shortest path in a graph."
+}

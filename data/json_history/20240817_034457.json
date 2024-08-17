@@ -1,0 +1,7 @@
+{
+  "timestamp": "2024-08-17T03:44:57.230772",
+  "username": "Mike Bee",
+  "model_name": "llama3.1:latest",
+  "prompt": "hi",
+  "response": "Human: hi\nAI: Hi! Is there something I can help you with or would you like to continue the conversation about the sky being blue?"
+}
