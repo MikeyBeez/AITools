@@ -4,25 +4,25 @@ from rich.live import Live
 from rich.console import Console
 from rich.text import Text
 import logging
+import sys
 from .context import conversation_context
 
 logging.basicConfig(level=logging.ERROR)
 
+
 class OllamaClient:
-    def __init__(self, base_url="http://localhost:11434", model="llama3.1:latest"):
+    def __init__(self, base_url="http://localhost:11434"):
         self.base_url = base_url
-        self.model = model
         self.console = Console()
 
-    def process_response(self, prompt):
+    def process_response(self, prompt, model):
         url = f"{self.base_url}/api/generate"
         headers = {"Content-Type": "application/json"}
-        
-        # Include conversation history in the prompt
+
         context = conversation_context.get_context_string()
         full_prompt = f"{context}\nHuman: {prompt}\nAI:"
-        
-        data = {"model": self.model, "prompt": full_prompt}
+
+        data = {"model": model, "prompt": full_prompt}
 
         try:
             with Live(console=self.console, refresh_per_second=4) as live:
@@ -37,17 +37,26 @@ class OllamaClient:
                                     live.update(Text(full_response))
                                 if json_response.get("done", False):
                                     break
-                        # Add the interaction to the conversation context
                         conversation_context.add_interaction(prompt, full_response.strip())
                     else:
                         self.console.print(f"Error: Received status code {response.status_code}")
         except requests.RequestException as e:
             self.console.print(f"Error connecting to Ollama: {e}")
 
+
 default_client = OllamaClient()
 
-def process_response(prompt):
-    default_client.process_response(prompt)
+
+def process_response(prompt, model):
+    default_client.process_response(prompt, model)
+
 
 if __name__ == "__main__":
-    process_response("Hello, world!")
+    default_model = "llama2:latest"
+    if len(sys.argv) > 1:
+        model = sys.argv[1]
+    else:
+        model = default_model
+
+    print(f"Testing with model: {model}")
+    process_response("Hello, world!", model)

@@ -1,19 +1,21 @@
-import textwrap
+# import textwrap
 from rich.console import Console
 from rich.panel import Panel
 from rich.align import Align
-from rich.text import Text
-from rich.columns import Columns
-from prompt_toolkit import prompt
-from prompt_toolkit.formatted_text import HTML
+# from rich.text import Text
+# from rich.columns import Columns
+# from prompt_toolkit import prompt
+# from prompt_toolkit.formatted_text import HTML
 import logging
+
 
 def setup_console():
     logging.debug("Setting up console")
     return Console()
 
-def print_welcome_banner(console):
-    logging.debug("Printing welcome banner")
+
+def print_welcome_banner(console, username):
+    logging.debug(f"Printing welcome banner for user: {username}")
     print("                      ***")
     print("                      ***")
     print("                      ***")
@@ -21,17 +23,21 @@ def print_welcome_banner(console):
     print("                      ***")
     print("                      ***")
     print("                      ***")
-    banner = """
+    banner = f"""
     [bold yellow] ██████  ████████ ████████  ██████ [/bold yellow]
     [bold red]██    ██    ██       ██    ██    ██[/bold red]
     [bold green]██    ██    ██       ██    ██    ██[/bold green]
     [bold blue]██    ██    ██       ██    ██    ██[/bold blue]
     [bold magenta]██    ██    ██       ██    ██    ██[/bold magenta]
     [bold cyan] ██████     ██       ██     ██████ [/bold cyan]
-    
+
     [bold white]Your Intelligent Conversational Companion[/bold white]
+
+    [bold green]Welcome, {username}![/bold green]
+    [bold red]Enter /help to get help. [/bold red]
     """
     console.print(Panel(Align.center(banner), border_style="bold white", expand=False))
+
 
 def print_separator(console):
     console.print("\n", end="")  # Start a new line
