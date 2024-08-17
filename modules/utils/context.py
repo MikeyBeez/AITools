@@ -1,4 +1,5 @@
 from collections import deque
+from .memory_search import search_memories
 
 
 class ConversationContext:
@@ -15,13 +16,19 @@ class ConversationContext:
             context += f"Human: {prompt}\nAI: {response}\n\n"
         return context.strip()
 
+    def get_relevant_context(self, query, top_k=3):
+        relevant_memories = search_memories(query, top_k)
+        context = "Relevant past interactions:\n\n"
+        for memory in relevant_memories:
+            context += f"Human: {memory['prompt']}\nAI: {memory['response']}\n\n"
+        return context.strip()
+
     def clear(self):
         self.history.clear()
 
     def truncate(self, n):
         if n < len(self.history):
             self.history = deque(list(self.history)[-n:], maxlen=self.max_history)
-# If n is greater than or equal to the current history length, no action is needed
 
 
 # Create a global instance of ConversationContext

@@ -8,7 +8,6 @@ import config  # Import the config file directly
 
 logger = logging.getLogger(__name__)
 
-
 class SlashCommandHandler:
     def __init__(self, console):
         self.console = console
@@ -26,6 +25,8 @@ class SlashCommandHandler:
             "/hi": self.history_command,
             "/search": self.search_command,
             "/s": self.search_command,
+            "/truncate": self.truncate_command,  # New command
+            "/tr": self.truncate_command,        # New abbreviation
         }
 
     def handle_command(self, command):
@@ -53,6 +54,7 @@ class SlashCommandHandler:
         table.add_row("/clear", "/c", "Clear the conversation history")
         table.add_row("/history", "/hi", "Display the conversation history")
         table.add_row("/search <query>", "/s <query>", "Perform a web search")
+        table.add_row("/truncate <n>", "/tr <n>", "Truncate history to last <n> entries")
 
         panel = Panel(table, expand=False, border_style="bold blue")
         self.console.print(panel)
@@ -102,6 +104,19 @@ class SlashCommandHandler:
 
         return True
 
+    def truncate_command(self, args):
+        if not args:
+            self.console.print("Please specify the number of entries to keep.", style="bold red")
+            return True
+        try:
+            n = int(args)
+            if n < 0:
+                raise ValueError
+            conversation_context.truncate(n)
+            self.console.print(f"Conversation history truncated to last {n} entries.", style="bold green")
+        except ValueError:
+            self.console.print("Invalid argument. Please provide a non-negative integer.", style="bold red")
+        return True
 
 def setup_slash_commands(console):
     return SlashCommandHandler(console)
