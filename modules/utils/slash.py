@@ -2,6 +2,7 @@ import logging
 from .context import conversation_context
 from rich.panel import Panel
 from rich.table import Table
+from rich.columns import Columns
 from .search import DDGSearch
 from .save_history import save_interaction
 import config  # Import the config file directly
@@ -43,25 +44,37 @@ class SlashCommandHandler:
         return "exit"
 
     def help_command(self, args):
-        table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
-        table.add_column("Full Command", style="cyan", no_wrap=True)
-        table.add_column("Abbreviation", style="green", no_wrap=True)
-        table.add_column("Description", style="yellow")
+        # Regular commands table
+        regular_table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
+        regular_table.add_column("Full Command", style="cyan", no_wrap=True)
+        regular_table.add_column("Abbreviation", style="green", no_wrap=True)
+        regular_table.add_column("Description", style="yellow")
 
-        table.add_row("/exit", "/e", "Exit the application")
-        table.add_row("/quit", "/q", "Exit the application (alias for /exit)")
-        table.add_row("/help", "/h", "Display this help message")
-        table.add_row("/clear", "/c", "Clear the conversation history")
-        table.add_row("/history", "/hi", "Display the conversation history")
-        table.add_row("/search <query>", "/s <query>", "Perform a web search")
-        table.add_row("/truncate <n>", "/tr <n>", "Truncate history to last <n> entries")
-        table.add_row("?ms <n> <m> <query>", "", "Enable memory search for this query\n"
-                      "n: number of top memories to retrieve\n"
-                      "m: similarity threshold (0.0 to 1.0)\n"
-                      "Example: ?ms 5 0.8 What is the capital of France?")
+        regular_table.add_row("/exit", "/e", "Exit the application")
+        regular_table.add_row("/quit", "/q", "Exit the application (alias for /exit)")
+        regular_table.add_row("/help", "/h", "Display this help message")
+        regular_table.add_row("/clear", "/c", "Clear the conversation history")
+        regular_table.add_row("/history", "/hi", "Display the conversation history")
+        regular_table.add_row("/search <query>", "/s <query>", "Perform a web search")
+        regular_table.add_row("/truncate <n>", "/tr <n>", "Truncate history to last <n> entries")
 
-        panel = Panel(table, expand=False, border_style="bold blue")
-        self.console.print(panel)
+        regular_panel = Panel(regular_table, expand=True, border_style="bold blue")
+
+        # Memory search command table
+        ms_table = Table(title="Memory Search Command", show_header=True, header_style="bold magenta")
+        ms_table.add_column("Command", style="cyan", no_wrap=True)
+        ms_table.add_column("Description", style="yellow")
+
+        ms_table.add_row("?ms <n> <m> <query>", "Enable memory search for this query\n"
+                         "n: number of top memories to retrieve\n"
+                         "m: similarity threshold (0.0 to 1.0)\n"
+                         "Example: ?ms 5 0.8 What is the capital of France?")
+
+        ms_panel = Panel(ms_table, expand=True, border_style="bold green")
+
+        # Display panels side by side
+        columns = Columns([regular_panel, ms_panel], expand=True)
+        self.console.print(columns)
         return True
 
     def clear_command(self, args):
