@@ -5,7 +5,10 @@ from rich.table import Table
 from rich.columns import Columns
 from .search import DDGSearch
 from .save_history import save_interaction
-import config  # Import the config file directly
+import config
+import requests
+import os
+from .response import OllamaClient
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +16,7 @@ class SlashCommandHandler:
     def __init__(self, console):
         self.console = console
         self.search_tool = DDGSearch()
+        self.ollama_client = OllamaClient()
         self.commands = {
             "/exit": self.exit_command,
             "/e": self.exit_command,
@@ -28,6 +32,7 @@ class SlashCommandHandler:
             "/s": self.search_command,
             "/truncate": self.truncate_command,
             "/tr": self.truncate_command,
+            "/cm": self.change_model_command,
         }
 
     def handle_command(self, command):
@@ -44,7 +49,6 @@ class SlashCommandHandler:
         return "exit"
 
     def help_command(self, args):
-        # Regular commands table
         regular_table = Table(title="Available Commands", show_header=True, header_style="bold magenta")
         regular_table.add_column("Full Command", style="cyan", no_wrap=True)
         regular_table.add_column("Abbreviation", style="green", no_wrap=True)
@@ -57,10 +61,10 @@ class SlashCommandHandler:
         regular_table.add_row("/history", "/hi", "Display the conversation history")
         regular_table.add_row("/search <query>", "/s <query>", "Perform a web search")
         regular_table.add_row("/truncate <n>", "/tr <n>", "Truncate history to last <n> entries")
+        regular_table.add_row("/cm", "", "Change the current Ollama model")
 
         regular_panel = Panel(regular_table, expand=True, border_style="bold blue")
 
-        # Memory search command table
         ms_table = Table(title="Memory Search Command", show_header=True, header_style="bold magenta")
         ms_table.add_column("Command", style="cyan", no_wrap=True)
         ms_table.add_column("Description", style="yellow")
@@ -72,7 +76,6 @@ class SlashCommandHandler:
 
         ms_panel = Panel(ms_table, expand=True, border_style="bold green")
 
-        # Display panels side by side
         columns = Columns([regular_panel, ms_panel], expand=True)
         self.console.print(columns)
         return True
@@ -113,10 +116,7 @@ class SlashCommandHandler:
             search_response += "No results found."
             self.console.print("No results found.", style="bold yellow")
 
-        # Add search command and results to conversation history
         conversation_context.add_interaction(f"/search {query}", search_response.strip())
-
-        # Save the search interaction to a JSON file
         save_interaction(f"/search {query}", search_response.strip(), config.USER_NAME, "Search")
 
         return True
@@ -135,11 +135,61 @@ class SlashCommandHandler:
             self.console.print("Invalid argument. Please provide a non-negative integer.", style="bold red")
         return True
 
-    def memory_search_command(self, args):
-        # This command doesn't need to do anything here, as it's handled in the context.py
-        # We'll just provide some feedback to the user
-        self.console.print("Memory search enabled for this query.", style="bold green")
-        return True
+    def get_ollama_models(self):
+        try:
+            response = requests.get("http://localhost:11434/api/tags")
+            if response.status_code == 200:
+                models = response.json().get('models', [])
+                return [model['name'] for model in models]
+            else:
+                logger.error(f"Failed to fetch Ollama models. Status code: {response.status_code}")
+                return []
+        except requests.RequestException as e:
+            logger.error(f"Error fetching Ollama models: {e}")
+            return []
+
+    def update_config_model(self, new_model):
+        config_path = os.path.join(os.path.dirname(__file__), '..', '..', 'config.py')
+        with open(config_path, 'r') as file:
+            lines = file.readlines()
+
+        for i, line in enumerate(lines):
+            if line.startswith('MODEL_NAME'):
+                lines[i] = f'MODEL_NAME = "{new_model}"\n'
+                break
+
+        with open(config_path, 'w') as file:
+            file.writelines(lines)
+
+        # Update the runtime configuration
+        config.MODEL_NAME = new_model
+
+    def change_model_command(self, args):
+        models = self.get_ollama_models()
+        if not models:
+            self.console.print("No Ollama models found or unable to fetch models.", style="bold red")
+            return True
+
+        self.console.print("Available Ollama models:", style="bold blue")
+        for i, model in enumerate(models, 1):
+            self.console.print(f"[{i}] {model}", style="cyan")
+
+        while True:
+            choice = self.console.input("Enter the number of the model you want to use (or 'q' to quit): ")
+            if choice.lower() == 'q':
+                return True
+            try:
+                choice = int(choice)
+                if 1 <= choice <= len(models):
+                    new_model = models[choice - 1]
+                    self.update_config_model(new_model)
+                    self.ollama_client = OllamaClient()  # Reinitialize the Ollama client with the new model
+                    self.console.print(f"Model changed to: {new_model}", style="bold green")
+                    return True
+                else:
+                    self.console.print("Invalid number. Please try again.", style="bold red")
+            except ValueError:
+                self.console.print("Invalid input. Please enter a number or 'q'.", style="bold red")
 
 def setup_slash_commands(console):
     return SlashCommandHandler(console)

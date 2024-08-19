@@ -1,85 +1,73 @@
-import asyncio
 import sys
-# import os
-from pathlib import Path
 import logging
-from modules.utils.input_util import ai_friendly_prompt
+from rich.console import Console
+from rich.panel import Panel
+from rich.text import Text
+from rich.spinner import Spinner
+from rich.live import Live
 from modules.utils.response import process_response
-from modules.utils.banner import setup_console, print_welcome_banner, print_separator
+from modules.utils.mprint import print_user_prompt, print_agent_response, stop_printer
+from modules.utils.context import conversation_context
 from modules.utils.slash import setup_slash_commands
-from modules.utils.initialize import initialize
+import config
+import time
 
-# Add the project root to the Python path
-project_root = Path(__file__).parent
-sys.path.append(str(project_root))
+# Setup logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
+def display_welcome_message():
+    console = Console()
+    welcome_text = Text()
+    welcome_text.append("Your Intelligent Conversational Companion\n\n", style="bold cyan")
+    welcome_text.append(f"Welcome, {config.USER_NAME}!\n", style="green")
+    welcome_text.append("Enter /help to get help.", style="yellow")
+    
+    panel = Panel(welcome_text, expand=False, border_style="bold blue", title="OTTO", subtitle="AI Assistant")
+    console.print(panel)
 
-def setup_logging():
-    project_root = Path(__file__).parent
-    log_dir = project_root / "logs"
-    log_dir.mkdir(exist_ok=True)
-    log_file = log_dir / "aitools.log"
+def show_thinking_indicator(console):
+    spinner = Spinner("dots", text="Otto is thinking")
+    with Live(spinner, refresh_per_second=10, console=console) as live:
+        for _ in range(10):  # Show spinner for about 1 second
+            time.sleep(0.1)
+            live.update(spinner)
 
-    # Remove any existing handlers to avoid duplication
-    for handler in logging.root.handlers[:]:
-        logging.root.removeHandler(handler)
-
-    # Create a file handler for all log levels
-    file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
-    file_handler.setLevel(logging.DEBUG)
-
-    # Create a formatter
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-
-    # Get the root logger and add the handler
-    root_logger = logging.getLogger()
-    root_logger.setLevel(logging.INFO)
-    root_logger.addHandler(file_handler)
-
-    # Suppress INFO messages from specific modules
-    logging.getLogger('httpcore').setLevel(logging.WARNING)
-    logging.getLogger('httpx').setLevel(logging.WARNING)
-
-    # print(f"Log file is located at: {log_file}")
-
-
-# Call logging setup
-setup_logging()
-
-# Initialize logger and config
-logger, config = initialize()
-
-
-async def main():
-    logger.info("Starting AITools")
-
-    console = setup_console()
-    print_welcome_banner(console, config['user_name'])
-    print_separator(console)
-
+def main():
+    display_welcome_message()
+    console = Console()
     slash_handler = setup_slash_commands(console)
 
     while True:
-        prompt = await ai_friendly_prompt(f"{config['user_name']}> ")
+        try:
+            print_user_prompt(config.USER_NAME)
+            user_input = console.input("[yellow]")  # Set input color to yellow
 
-        if prompt is None:
-            logger.info("Exiting AITools due to user interrupt")
-            break
+            if user_input.lower().startswith('/'):
+                result = slash_handler.handle_command(user_input)
+                if result == "exit":
+                    break
+                elif result:
+                    continue
 
-        if prompt.startswith('/'):
-            result = slash_handler.handle_command(prompt)
-            if result == "exit":
+            show_thinking_indicator(console)
+            console.print("\nOtto> ", end="", style="bold cyan")
+            response = process_response(user_input, config.MODEL_NAME, config.USER_NAME)
+            console.print()  # Add a newline after the response
+            
+            if response.lower() in ["goodbye!", "exit", "quit"]:
+                print_agent_response("Goodbye! Have a great day!")
                 break
-            elif result:
-                continue
 
-        logger.info(f"Processing prompt: {prompt}")
-        response = process_response(prompt, config['model_name'], config['user_name'])
-        print(response)  # Only print the LLM's response
-        print_separator(console)
+        except KeyboardInterrupt:
+            print("\nInterrupted by user. Exiting...")
+            break
+        except Exception as e:
+            logger.error(f"An error occurred: {e}", exc_info=True)
+            print_agent_response(f"An error occurred: {e}")
 
-    logger.info("AITools session ended")
+    stop_printer()
+    print("\nThank you for using OTTO. Goodbye!")
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

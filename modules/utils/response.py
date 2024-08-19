@@ -4,6 +4,7 @@ import logging
 import sys
 from .context import conversation_context
 from .save_history import save_interaction
+import config
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,6 @@ class OllamaClient:
 
         full_prompt = conversation_context.get_relevant_context(prompt)
         
-        # Extract the actual query if it's a memory search command
         if prompt.startswith("?ms "):
             _, _, _, *query_parts = prompt.split()
             actual_prompt = " ".join(query_parts)
@@ -36,9 +36,12 @@ class OllamaClient:
                         if line:
                             json_response = json.loads(line)
                             if "response" in json_response:
-                                full_response += json_response["response"]
+                                chunk = json_response["response"]
+                                full_response += chunk
+                                print(chunk, end="", flush=True)
                             if json_response.get("done", False):
                                 break
+                    print()  # Add a newline after the response
                     conversation_context.add_interaction(actual_prompt, full_response.strip())
                     save_interaction(actual_prompt, full_response.strip(), username, model)
                     logger.info(f"Response generated and saved for prompt: {actual_prompt[:50]}...")
@@ -59,13 +62,15 @@ def process_response(prompt, model, username):
     logger.info(f"Processing response: prompt='{prompt[:50]}...', model={model}, username={username}")
     return default_client.process_response(prompt, model, username)
 
+# Make sure to export the process_response function
+__all__ = ['process_response']
+
 if __name__ == "__main__":
-    default_model = "llama2:latest"
+    default_model = "llama3.1:latest"
     if len(sys.argv) > 1:
         model = sys.argv[1]
     else:
         model = default_model
 
     logger.info(f"Testing with model: {model}")
-    response = process_response("Hello, world!", model, "TestUser")
-    print(response)
+    process_response("Hello, world!", model, config.USER_NAME)
