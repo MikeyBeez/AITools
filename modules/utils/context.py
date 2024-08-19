@@ -4,6 +4,7 @@ from .memory_search import search_memories
 
 logger = logging.getLogger(__name__)
 
+
 class ConversationContext:
     def __init__(self, max_history=15):
         self.history = deque(maxlen=max_history)
@@ -45,10 +46,10 @@ class ConversationContext:
 
     def _get_context_with_memory_search(self, query, top_k, similarity_threshold):
         relevant_memories = search_memories(query, top_k)
-        
+
         context = f"Current Query: {query}\n\n"
         context += self.get_context_string() + "\n\n"
-        
+
         context += "Relevant Memories:\n"
         memory_count = 0
         for memory in relevant_memories:
@@ -60,10 +61,10 @@ class ConversationContext:
                 memory_count += 1
             if memory_count >= top_k:
                 break
-        
+
         if memory_count == 0:
             logger.info("No relevant memories found above the similarity threshold.")
-        
+
         full_prompt = f"{context}\nHuman: {query}\nAI:"
         logger.info(f"Memory search context generated for query: {query}")
         return full_prompt
@@ -74,6 +75,7 @@ class ConversationContext:
     def truncate(self, n):
         if n < len(self.history):
             self.history = deque(list(self.history)[-n:], maxlen=self.max_history)
+
 
 # Create a global instance of ConversationContext
 conversation_context = ConversationContext()

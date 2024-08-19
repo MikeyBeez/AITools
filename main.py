@@ -1,6 +1,6 @@
 import asyncio
 import sys
-import os
+# import os
 from pathlib import Path
 import logging
 from modules.utils.input_util import ai_friendly_prompt
@@ -12,6 +12,7 @@ from modules.utils.initialize import initialize
 # Add the project root to the Python path
 project_root = Path(__file__).parent
 sys.path.append(str(project_root))
+
 
 def setup_logging():
     project_root = Path(__file__).parent
@@ -40,13 +41,15 @@ def setup_logging():
     logging.getLogger('httpcore').setLevel(logging.WARNING)
     logging.getLogger('httpx').setLevel(logging.WARNING)
 
-    print(f"Log file is located at: {log_file}")
+    # print(f"Log file is located at: {log_file}")
+
 
 # Call logging setup
 setup_logging()
 
 # Initialize logger and config
 logger, config = initialize()
+
 
 async def main():
     logger.info("Starting AITools")

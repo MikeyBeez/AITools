@@ -3,7 +3,7 @@ import json
 import numpy as np
 from numpy.linalg import norm
 import ollama
-from datetime import datetime
+# from datetime import datetime
 from typing import List, Tuple, Dict, Any
 import logging
 
@@ -14,12 +14,14 @@ project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_file_path
 # Set the data directory relative to the project root
 data_dir = os.path.join(project_root, "data", "json_history")
 
+
 def read_file(filename: str) -> Dict[str, Any]:
     """Read a JSON file and return its contents."""
     with open(os.path.join(data_dir, filename), encoding="utf-8") as f:
         data = json.load(f)
         logging.debug(f"Read file: {filename}")
         return data
+
 
 def save_embeddings(filename: str, embeddings: List[float]) -> None:
     """Save embeddings to a JSON file."""
@@ -28,6 +30,7 @@ def save_embeddings(filename: str, embeddings: List[float]) -> None:
     with open(os.path.join(embeddings_dir, f"{filename}.json"), "w") as f:
         json.dump(embeddings, f)
     logging.info(f"Saved embeddings for file: {filename}")
+
 
 def load_embeddings(filename: str) -> List[float]:
     """Load embeddings from a JSON file."""
@@ -40,6 +43,7 @@ def load_embeddings(filename: str) -> List[float]:
         logging.debug(f"Loaded existing embeddings for file: {filename}")
         return embeddings
 
+
 def get_embeddings(filename: str, modelname: str) -> List[float]:
     """Get embeddings for a file, either from cache or by generating new ones."""
     if embeddings := load_embeddings(filename):
@@ -51,6 +55,7 @@ def get_embeddings(filename: str, modelname: str) -> List[float]:
     logging.info(f"Generated new embeddings for file: {filename}")
     return embeddings
 
+
 def find_most_similar(needle: List[float], haystack: List[List[float]]) -> List[Tuple[float, int]]:
     """Find cosine similarity of every file to a given embedding."""
     needle_norm = norm(needle)
@@ -58,6 +63,7 @@ def find_most_similar(needle: List[float], haystack: List[List[float]]) -> List[
         np.dot(needle, item) / (needle_norm * norm(item)) for item in haystack
     ]
     return sorted(zip(similarity_scores, range(len(haystack))), reverse=True)
+
 
 def search_memories(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
     """Search memories and return the most relevant ones with metadata."""
@@ -81,6 +87,7 @@ def search_memories(query: str, top_k: int = 5) -> List[Dict[str, Any]]:
 
     return relevant_memories
 
+
 def generate_embeddings_for_existing_files():
     """Generate embeddings for all existing JSON files that don't have embeddings yet."""
     memory_files = [f for f in os.listdir(data_dir) if f.endswith(".json")]
@@ -88,6 +95,7 @@ def generate_embeddings_for_existing_files():
         if not load_embeddings(filename):
             get_embeddings(filename, "nomic-embed-text")
     logging.info(f"Generated embeddings for {len(memory_files)} files")
+
 
 # Run this function when the module is imported to ensure all files have embeddings
 generate_embeddings_for_existing_files()
