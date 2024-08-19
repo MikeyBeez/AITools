@@ -42,6 +42,21 @@ AITools/
 ### 🔍 Memory Search: Your AI's Superhero Power!
 Our memory search feature is like giving your AI a superpower! It can recall past conversations with incredible accuracy, making each interaction more meaningful and context-aware. It's not just search; it's time travel for knowledge! ⏳💡
 
+#### 🔮 How to Use Memory Search
+Activate the memory search by using the `?ms` command followed by parameters:
+```
+?ms <n> <m> <query>
+```
+- `n`: Number of top memories to retrieve
+- `m`: Similarity threshold (0.0 to 1.0)
+- `query`: Your question or prompt
+
+Example:
+```
+?ms 5 0.8 What did we discuss about Python classes?
+```
+This will search for the top 5 memories with a similarity threshold of 0.8 related to Python classes.
+
 ### 📝 Logging: The AI Whisperer
 Our logging system is the secret sauce that makes debugging a breeze. It's like having a play-by-play commentator for your AI interactions. Every detail, every decision, all captured for your curious eyes! 👀📊
 
@@ -73,6 +88,8 @@ python main.py
 ```
 
 Now you're chatting with an AI! Feel like a fresh start? Just say "clear history"!
+
+Want to use memory search? Try the `?ms` command as explained above!
 
 ## 🧪 For the Curious Minds
 

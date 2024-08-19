@@ -55,6 +55,30 @@ Our context management system is like a time machine for conversations:
 ### 🔍 Memory Search: Your AI's Time Machine
 Imagine giving your AI the power to remember everything perfectly. That's our memory search! It doesn't just find information; it uncovers insights from past conversations, making each interaction richer and more meaningful. It's like having a librarian, historian, and fortune teller all rolled into one! 📚🔮
 
+#### 🔮 The Magic of ?ms Command
+Our memory search feature is activated using the `?ms` command. Here's how it works:
+
+1. **Syntax**: `?ms <n> <m> <query>`
+   - `n`: Number of top memories to retrieve
+   - `m`: Similarity threshold (0.0 to 1.0)
+   - `query`: Your question or prompt
+
+2. **Behind the Scenes**:
+   - When you use `?ms`, we dive into our conversation history.
+   - We use advanced similarity algorithms to find the most relevant past interactions.
+   - The AI then uses these memories to provide a more informed and contextual response.
+
+3. **Use Cases**:
+   - Recalling specific details from earlier in the conversation
+   - Connecting ideas across different chat sessions
+   - Helping the AI maintain long-term context awareness
+
+Example:
+```
+?ms 5 0.8 What were the key points about Python generators?
+```
+This would retrieve the top 5 memories with at least 80% similarity to the query about Python generators.
+
 ### 📝 Logging: The All-Seeing Eye
 Our logging system is like a super-detailed diary of your AI's thoughts. Every decision, every computation, all laid out for you to see. It's not just for squashing bugs; it's for understanding the very soul of your AI interactions! Perfect for curious minds and debugging detectives alike. 🕵️‍♂️🔍
 
@@ -76,7 +100,7 @@ We're on an exciting journey, and we want you with us! Whether you're a code wiz
 Remember, AITools is in beta, which means you're not just a user - you're a pioneer! Every question, every bug report, every "what if" helps shape the future of AITools. So don't be shy - dive in, explore, and let's make AI magic together! 🌟🚀
 
 Happy coding, and may your AI conversations be ever insightful! 🧠💬✨
+
 # AITools
 
-## Note:  It's my hope that this architecture will allow me to keep track of all the code as well as possible.  It's important that ony core functionality exist in each module.
-
+## Note:  It's my hope that this architecture will allow me to keep track of all the code as well as possible.  It's important that only core functionality exist in each module.
