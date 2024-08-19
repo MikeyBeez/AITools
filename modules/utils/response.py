@@ -5,7 +5,6 @@ import sys
 from .context import conversation_context
 from .save_history import save_interaction
 
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class OllamaClient:
@@ -20,6 +19,13 @@ class OllamaClient:
 
         full_prompt = conversation_context.get_relevant_context(prompt)
         
+        # Extract the actual query if it's a memory search command
+        if prompt.startswith("?ms "):
+            _, _, _, *query_parts = prompt.split()
+            actual_prompt = " ".join(query_parts)
+        else:
+            actual_prompt = prompt
+
         data = {"model": model, "prompt": full_prompt}
 
         try:
@@ -33,9 +39,9 @@ class OllamaClient:
                                 full_response += json_response["response"]
                             if json_response.get("done", False):
                                 break
-                    conversation_context.add_interaction(prompt, full_response.strip())
-                    save_interaction(prompt, full_response.strip(), username, model)
-                    logger.info(f"Response generated and saved for prompt: {prompt[:50]}...")
+                    conversation_context.add_interaction(actual_prompt, full_response.strip())
+                    save_interaction(actual_prompt, full_response.strip(), username, model)
+                    logger.info(f"Response generated and saved for prompt: {actual_prompt[:50]}...")
                     return full_response.strip()
                 else:
                     error_msg = f"Error: Received status code {response.status_code}"

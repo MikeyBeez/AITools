@@ -25,8 +25,8 @@ class SlashCommandHandler:
             "/hi": self.history_command,
             "/search": self.search_command,
             "/s": self.search_command,
-            "/truncate": self.truncate_command,  # New command
-            "/tr": self.truncate_command,        # New abbreviation
+            "/truncate": self.truncate_command,
+            "/tr": self.truncate_command,
         }
 
     def handle_command(self, command):
@@ -55,6 +55,10 @@ class SlashCommandHandler:
         table.add_row("/history", "/hi", "Display the conversation history")
         table.add_row("/search <query>", "/s <query>", "Perform a web search")
         table.add_row("/truncate <n>", "/tr <n>", "Truncate history to last <n> entries")
+        table.add_row("?ms <n> <m> <query>", "", "Enable memory search for this query\n"
+                      "n: number of top memories to retrieve\n"
+                      "m: similarity threshold (0.0 to 1.0)\n"
+                      "Example: ?ms 5 0.8 What is the capital of France?")
 
         panel = Panel(table, expand=False, border_style="bold blue")
         self.console.print(panel)
@@ -116,6 +120,12 @@ class SlashCommandHandler:
             self.console.print(f"Conversation history truncated to last {n} entries.", style="bold green")
         except ValueError:
             self.console.print("Invalid argument. Please provide a non-negative integer.", style="bold red")
+        return True
+
+    def memory_search_command(self, args):
+        # This command doesn't need to do anything here, as it's handled in the context.py
+        # We'll just provide some feedback to the user
+        self.console.print("Memory search enabled for this query.", style="bold green")
         return True
 
 def setup_slash_commands(console):

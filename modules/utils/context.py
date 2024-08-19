@@ -18,7 +18,32 @@ class ConversationContext:
             context += f"Human: {prompt}\nAI: {response}\n\n"
         return context.strip()
 
-    def get_relevant_context(self, query, top_k=5, similarity_threshold=0.80):
+    def get_relevant_context(self, query):
+        if query.startswith("?ms "):
+            logger.info(f"Processing memory search query: {query}")
+            try:
+                _, top_k, similarity_threshold, *query_parts = query.split()
+                top_k = int(top_k)
+                similarity_threshold = float(similarity_threshold)
+                actual_query = " ".join(query_parts)
+                logger.info(f"Memory search parameters: top_k={top_k}, similarity_threshold={similarity_threshold}, query='{actual_query}'")
+                full_prompt = self._get_context_with_memory_search(actual_query, top_k, similarity_threshold)
+            except ValueError:
+                logger.error("Invalid ?ms command format. Using default context.")
+                full_prompt = self._get_default_context(query)
+        else:
+            full_prompt = self._get_default_context(query)
+
+        logger.info(f"Full assembled context: {full_prompt[:500]}...")  # Log first 500 chars
+        return full_prompt
+
+    def _get_default_context(self, query):
+        context = self.get_context_string()
+        full_prompt = f"{context}\n\nHuman: {query}\nAI:"
+        logger.info(f"Using default context for query: {query}")
+        return full_prompt
+
+    def _get_context_with_memory_search(self, query, top_k, similarity_threshold):
         relevant_memories = search_memories(query, top_k)
         
         context = f"Current Query: {query}\n\n"
@@ -31,12 +56,16 @@ class ConversationContext:
                 context += f"Memory {memory_count + 1} (Similarity: {memory['similarity']:.4f}):\n"
                 context += f"Human: {memory['prompt']}\n"
                 context += f"AI: {memory['response']}\n\n"
+                logger.info(f"Retrieved Memory {memory_count + 1}: Similarity={memory['similarity']:.4f}, Prompt='{memory['prompt'][:50]}...', Response='{memory['response'][:50]}...'")
                 memory_count += 1
             if memory_count >= top_k:
                 break
         
+        if memory_count == 0:
+            logger.info("No relevant memories found above the similarity threshold.")
+        
         full_prompt = f"{context}\nHuman: {query}\nAI:"
-        logger.info(f"Full context being sent to LLM:\n{full_prompt}")
+        logger.info(f"Memory search context generated for query: {query}")
         return full_prompt
 
     def clear(self):
