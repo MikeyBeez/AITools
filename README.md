@@ -17,6 +17,9 @@ AITools is a magical Python project that lets you chat with AI models using the 
 - 🗣️ Smart conversation history that remembers your chat
 - 📝 Super-smart logging system (it's like a diary for your AI!)
 - 🔍 Memory search that finds needles in AI haystacks
+- 🤔 "Thinking" indicator to show when Otto is processing
+- 🔄 Real-time streaming of AI responses
+- 🔀 Easy model switching with the `/cm` command
 
 ## 🏗️ The Building Blocks
 
@@ -33,7 +36,8 @@ AITools/
 │       ├── 🎤 input_util.py
 │       ├── 💬 response.py
 │       ├── 🖨️ mprint.py
-│       └── 🧠 context.py
+│       ├── 🧠 context.py
+│       └── 🔪 slash.py
 └── 🧪 tests/
 ```
 
@@ -59,6 +63,9 @@ This will search for the top 5 memories with a similarity threshold of 0.8 relat
 
 ### 📝 Logging: The AI Whisperer
 Our logging system is the secret sauce that makes debugging a breeze. It's like having a play-by-play commentator for your AI interactions. Every detail, every decision, all captured for your curious eyes! 👀📊
+
+### 🔄 Model Switching: Change Your AI's Brain
+Want to try a different AI model? Just use the `/cm` command to see available models and switch on the fly. It's like giving your AI a wardrobe of different personalities!
 
 ## 🚀 Ready for Takeoff?
 
@@ -87,9 +94,11 @@ Fire up the AI playground:
 python main.py
 ```
 
-Now you're chatting with an AI! Feel like a fresh start? Just say "clear history"!
-
-Want to use memory search? Try the `?ms` command as explained above!
+Now you're chatting with an AI! Here are some cool things to try:
+- Feel like a fresh start? Just say "/clear" or "/c"!
+- Want to use memory search? Try the `?ms` command as explained above!
+- Switch models with "/cm"
+- Get help anytime with "/help" or "/h"
 
 ## 🧪 For the Curious Minds
 

@@ -22,13 +22,18 @@ AITools is built on these rock-solid principles:
 
 6. **🧠 Context Management**: Our conversation history management is like giving the AI a really good memory. It's not just smart; it's wise!
 
+7. **🤔 User Feedback**: We've added a "thinking" indicator to show when the AI is processing, making the interaction more natural and engaging.
+
+8. **🔄 Real-time Streaming**: AI responses are now streamed in real-time, providing a more dynamic and interactive experience.
+
 ## 🎭 The Cast of Characters
 
 - `main.py`: The ringmaster of our AI circus 🎪
 - `modules/utils/input_util.py`: The attentive listener 👂
 - `modules/utils/response.py`: The smooth-talking responder 🗣️
-- `modules/utils/mprint.py`: Our retired printer, enjoying its golden years 👴
+- `modules/utils/mprint.py`: Our printer, now with real-time streaming capabilities 🖨️
 - `modules/utils/context.py`: The elephant that never forgets 🐘
+- `modules/utils/slash.py`: The command center for all your slash needs 🔪
 
 ## 🔍 Spotlight on: Context Management
 
@@ -40,15 +45,16 @@ Our context management system is like a time machine for conversations:
 
 3. **🧠 Smart Prompts**: We serve each prompt to the AI with a side of context. It's like giving them a little history lesson before each response!
 
-4. **🧹 Fresh Start**: Need a clean slate? Just say "clear history"! It's like a reset button for your conversation.
+4. **🧹 Fresh Start**: Need a clean slate? Just say "/clear"! It's like a reset button for your conversation.
 
 5. **🔄 The Circle of Chat**:
    a. You speak 🗣️
-   b. We add some context 🧠
-   c. AI ponders 🤔
-   d. AI responds 💬
-   e. We remember this moment 📸
-   f. Repeat! 🔁
+   b. We show a thinking indicator 🤔
+   c. We add some context 🧠
+   d. AI ponders and starts streaming the response 💬
+   e. We display the response in real-time ⚡
+   f. We remember this moment 📸
+   g. Repeat! 🔁
 
 ## 🌟 Special Features Showcase
 
@@ -73,14 +79,16 @@ Our memory search feature is activated using the `?ms` command. Here's how it wo
    - Connecting ideas across different chat sessions
    - Helping the AI maintain long-term context awareness
 
-Example:
-```
-?ms 5 0.8 What were the key points about Python generators?
-```
-This would retrieve the top 5 memories with at least 80% similarity to the query about Python generators.
-
 ### 📝 Logging: The All-Seeing Eye
 Our logging system is like a super-detailed diary of your AI's thoughts. Every decision, every computation, all laid out for you to see. It's not just for squashing bugs; it's for understanding the very soul of your AI interactions! Perfect for curious minds and debugging detectives alike. 🕵️‍♂️🔍
+
+### 🔄 Model Switching: The AI Chameleon
+With the new `/cm` command, switching between different AI models is a breeze. It's like giving your AI the ability to put on different hats, each with its own unique perspective and capabilities. Here's how it works:
+
+1. **Listing Models**: When you use `/cm`, we fetch and display all available Ollama models.
+2. **User Selection**: You choose the model you want by entering its number.
+3. **Config Update**: We update both the runtime configuration and the `config.py` file to persist your choice.
+4. **Seamless Transition**: The next interaction will use the newly selected model, no restart required!
 
 ## 🚀 The Future is Bright!
 
@@ -103,4 +111,4 @@ Happy coding, and may your AI conversations be ever insightful! 🧠💬✨
 
 # AITools
 
-## Note:  It's my hope that this architecture will allow me to keep track of all the code as well as possible.  It's important that only core functionality exist in each module.
+## Note: It's my hope that this architecture will allow me to keep track of all the code as well as possible. It's important that only core functionality exist in each module.
