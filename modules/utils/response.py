@@ -21,6 +21,7 @@ class OllamaClient:
         full_prompt = conversation_context.get_relevant_context(prompt)
         
         if prompt.startswith("?ms "):
+            print("Please be patient.  Search takes a while.")
             _, _, _, *query_parts = prompt.split()
             actual_prompt = " ".join(query_parts)
         else:
@@ -38,7 +39,9 @@ class OllamaClient:
                             if "response" in json_response:
                                 chunk = json_response["response"]
                                 full_response += chunk
-                                print(chunk, end="", flush=True)
+                                print("\033[33m" + chunk + "\033[0m", end="", flush=True)
+                                print("\033[0m", end="", flush=True)
+                                # print(chunk, end="", flush=True)
                             if json_response.get("done", False):
                                 break
                     print()  # Add a newline after the response

@@ -27,11 +27,7 @@ def display_welcome_message():
     console.print(panel)
 
 def show_thinking_indicator(console):
-    spinner = Spinner("dots", text="Otto is thinking")
-    with Live(spinner, refresh_per_second=10, console=console) as live:
-        for _ in range(10):  # Show spinner for about 1 second
-            time.sleep(0.1)
-            live.update(spinner)
+    print("Otto is thinking")
 
 def main():
     display_welcome_message()
